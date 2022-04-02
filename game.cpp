@@ -3,6 +3,7 @@
 #include <list>
 #include <time.h>
 #include <chrono>
+#include <math.h>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
 
@@ -19,13 +20,30 @@ using namespace std;
 bool canSpawn(){
 	srand(time(NULL));
 	int t = rand()%50;
-	if(t == 25) return true;
+	if(t % 20 == 0) return true;
+
 	return false;
+}
+
+void gameOver(){
+	cout << BOLDRED;
+	gotoxy(77, 10);
+	cout << "███▀▀▀██ ███▀▀▀███ ███▀█▄█▀███ ██▀▀▀    ███▀▀▀███ ▀███ ███▀ ██▀▀▀ ██▀▀▀▀██▄";
+	gotoxy(77, 11); 
+	cout << "██    ██ ██     ██ ██   █   ██ ██       ██     ██   ██ ██   ██    ██     ██";
+	gotoxy(77, 12); 
+	cout << "██   ▄▄▄ ██▄▄▄▄▄██ ██   ▀   ██ ██▀▀▀    ██     ██   ██ ██   ██▀▀▀ ██▄▄▄▄▄▀▀";
+	gotoxy(77, 13); 
+	cout << "██    ██ ██     ██ ██       ██ ██       ██     ██   ██ ██   ██    ██     ██";
+	gotoxy(77, 14); 
+	cout << "███▄▄▄██ ██     ██ ██       ██ ██▄▄▄    ███▄▄▄███    ▀█▀    ██▄▄▄ ██     ██▄";
+	cout << RESET;
 }
 
 int main(){
 
 	bool canPlayAudio = true;
+	const int MAX_SPEED_ALLOWED = 200;
 	system("clear");
 /**
  * MAIN MENU
@@ -136,12 +154,12 @@ int main(){
 		{
 			if(isAccelerating){
 				car.accelerate();
-				audio.playAccelerate(car.getSpeed());
+				if(canPlayAudio) audio.playAccelerate(car.getSpeed());
 			}
 
 			if(isBraking){
 				car.brake();
-				audio.playBrake(car.getSpeed());
+				if(canPlayAudio) audio.playBrake(car.getSpeed());
 			}
 			if(isRight){ 
 				if(car.getSpeed() > 0){
@@ -155,15 +173,16 @@ int main(){
 					isRight = false;
 				} 
 			}
-			if(!isAccelerating && !isBraking) audio.playSame(car.getSpeed());
+			if(canPlayAudio && !isAccelerating && !isBraking) audio.playSame(car.getSpeed());
 			carStart = chrono::system_clock::now();
 		}
 
 
 /**
  * UPDATING UI
-*/
-		usleep( (200 - car.getSpeed()) * 100);
+*/		
+		
+		usleep( (MAX_SPEED_ALLOWED - car.getSpeed()) * 120 / car.getGear() );
 		map.display(car.getSpeed());
 		car.display();
 
@@ -181,19 +200,8 @@ int main(){
 				en.display();
 				if(en.isCollidingWith(car)){
 					char backslash = 92;
-					cout << BOLDRED;
-					gotoxy(77, 10);
-                    cout << "███▀▀▀██ ███▀▀▀███ ███▀█▄█▀███ ██▀▀▀    ███▀▀▀███ ▀███ ███▀ ██▀▀▀ ██▀▀▀▀██▄\n";
-					gotoxy(77, 11); 
-					cout << "██    ██ ██     ██ ██   █   ██ ██       ██     ██   ██ ██   ██    ██     ██ \n";
-					gotoxy(77, 12); 
-					cout << "██   ▄▄▄ ██▄▄▄▄▄██ ██   ▀   ██ ██▀▀▀    ██     ██   ██ ██   ██▀▀▀ ██▄▄▄▄▄▀▀\n";
-					gotoxy(77, 13); 
-					cout << "██    ██ ██     ██ ██       ██ ██       ██     ██   ██ ██   ██    ██     ██\n";
-					gotoxy(77, 14); 
-					cout << "███▄▄▄██ ██     ██ ██       ██ ██▄▄▄    ███▄▄▄███    ▀█▀    ██▄▄▄ ██     ██▄\n";
-					cout << RESET;
-					exit(5);
+					gameOver();
+					exit(0);
 				}
 			}
 			else if(en.getCoord().x < -150 || en.getCoord().x > 400){

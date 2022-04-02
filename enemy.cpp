@@ -11,5 +11,5 @@ Enemy::Enemy(int b, int index){
 }
 
 void Enemy::updatePos(int playerSpeed){
-    pos.x += (float)(speed - playerSpeed) / 25;
+    pos.x += (float)(speed - playerSpeed) / 20;
 }
