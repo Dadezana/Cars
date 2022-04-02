@@ -12,6 +12,9 @@ class Audio{
     sf::Sound fourthGear;               // 165 - 200 Km/h
     sf::Sound brake;
     sf::Sound sameSpeed;
+    sf::Sound horn;
+    sf::Sound crash;
+    sf::Sound stop;
 
     sf::SoundBuffer firstGearBuffer;    
     sf::SoundBuffer secondGearBuffer;
@@ -19,6 +22,9 @@ class Audio{
     sf::SoundBuffer fourthGearBuffer;
     sf::SoundBuffer brakeBuffer;
     sf::SoundBuffer sameSpeedBuffer;
+    sf::SoundBuffer hornBuffer;
+    sf::SoundBuffer crashBuffer;
+    sf::SoundBuffer stopBuffer;
 
     bool audioGearPlaying();
 
@@ -29,6 +35,8 @@ class Audio{
         void playSame(int speed);
         void  stopAllSounds(bool justGears = false);
         void setVolume(int vol = 100);
+        void playHorn();
+        void playCrash();
 };
 
 #endif

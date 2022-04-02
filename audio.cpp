@@ -7,6 +7,9 @@ Audio::Audio(){
     fourthGearBuffer.loadFromFile("sounds/fourthGear.wav");
     brakeBuffer.loadFromFile("sounds/brake.wav");
     sameSpeedBuffer.loadFromFile("sounds/sameSpeed.wav");
+    hornBuffer.loadFromFile("sounds/horn.wav");
+    crashBuffer.loadFromFile("sounds/crash.wav");
+    stopBuffer.loadFromFile("sounds/stop.wav");
 
     firstGear.setBuffer(firstGearBuffer);
     secondGear.setBuffer(secondGearBuffer);
@@ -15,8 +18,12 @@ Audio::Audio(){
     brake.setBuffer(brakeBuffer);
     sameSpeed.setBuffer(sameSpeedBuffer);
     sameSpeed.setLoop(true);
+    crash.setBuffer(crashBuffer);
+    horn.setBuffer(hornBuffer);
+    stop.setBuffer(stopBuffer);
+    stop.setLoop(true);
 
-    setVolume(40);
+    setVolume(60);
 }
 
 void Audio::playAccelerate(int speed){
@@ -69,6 +76,7 @@ void Audio::playBrake(int speed){
 void Audio::playSame(int speed){
     if(speed == 0){
         sameSpeed.stop();
+        if(stop.getStatus() == sf::SoundSource::Stopped) stop.play();
         return;
     }
     if(sameSpeed.getStatus() == sf::SoundSource::Stopped){
@@ -76,6 +84,19 @@ void Audio::playSame(int speed){
         sameSpeed.play();
     }
         
+}
+
+void Audio::playHorn(){
+    if(horn.getStatus() != sf::SoundSource::Playing){
+        horn.play();
+    }
+}
+
+void Audio::playCrash(){
+    if(crash.getStatus() != sf::SoundSource::Playing){
+        stopAllSounds();
+        crash.play();
+    }
 }
 
 bool Audio::audioGearPlaying(){
@@ -104,6 +125,7 @@ void Audio::stopAllSounds(bool justGears){
     fourthGear.stop();
     brake.stop();
     sameSpeed.stop();
+    stop.stop();
 }
 
 void Audio::setVolume(int vol){
@@ -114,4 +136,7 @@ void Audio::setVolume(int vol){
     fourthGear.setVolume(vol);
     brake.setVolume(vol);
     sameSpeed.setVolume(vol);
+    crash.setVolume(vol);
+    horn.setVolume(vol);
+    stop.setVolume(vol);
 }

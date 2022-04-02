@@ -14,7 +14,7 @@
 #include "audio.h"
 #define RIGHT true
 #define LEFT false
-#define MAX_SPAWN_TIME 8	// if no enemy spawns within 8sec, a new one will spawn immediatly
+#define MAX_SPAWN_TIME 7	// if no enemy spawns within 7sec, a new one will spawn immediatly
 using namespace std;
 
 bool canSpawn(){
@@ -26,7 +26,7 @@ bool canSpawn(){
 	static int max = 50;
 
 	if( secs.count() > 1 ){
-		max += 1;
+		max += 5;
 		spawnStart = chrono::system_clock::now();
 	}
 	if( (rand()%max) % 20 == 0) return true;
@@ -156,6 +156,7 @@ int main(){
 		isRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
 		isLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) exit(0);
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) audio.playHorn();
 
 		carEnd = chrono::system_clock::now();
 		seconds = carEnd - carStart;
@@ -210,6 +211,8 @@ int main(){
 				if(en.isCollidingWith(car)){
 					char backslash = 92;
 					gameOver();
+					audio.playCrash();
+					sleep(2);
 					exit(0);
 				}
 			}
