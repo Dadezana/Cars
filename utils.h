@@ -5,6 +5,7 @@
 #include <termios.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <sys/ioctl.h> // get terminal size
 using namespace std;
 
 #define RESET   "\033[0m"
@@ -22,6 +23,8 @@ using namespace std;
 #define GREY "\u001b[30;1m"
 #define BRIGHTCYAN "\u001b[36;1m"
 
+#define MIN_WIN_HEIGHT 41
+#define MIN_WIN_WIDTH 225
 
 
 inline void gotoxy(int x,int y)
@@ -63,5 +66,25 @@ struct coord{
 	float x;
 	int y;
 };
+
+inline bool gameFit(){
+	int width = 80;
+	int height = 24;
+
+	#ifdef TIOCGSIZE
+		struct ttysize ts;
+		ioctl(STDIN_FILENO, TIOCGSIZE, &ts);
+		width = ts.ts_cols;
+		height = ts.ts_lines;
+	#elif defined(TIOCGWINSZ)
+		struct winsize ts;
+		ioctl(STDIN_FILENO, TIOCGWINSZ, &ts);
+		width = ts.ws_col;
+		height = ts.ws_row;
+	#endif
+
+	return(width > MIN_WIN_WIDTH && height > MIN_WIN_HEIGHT);
+}
+
 
 #endif

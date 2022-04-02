@@ -6,6 +6,7 @@
 #include <math.h>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
+#include <sys/ioctl.h>	// get terminal size
 
 #include "car.h"
 #include "animation.h"
@@ -58,13 +59,11 @@ int main(){
  * MAIN MENU
 */
 
-	const int NUM_OPTIONS = 5;
+	const int NUM_OPTIONS = 3;
 	char options[NUM_OPTIONS][CHAR_OPZIONE_MAX];
 	strcpy(options[0], "Play");
 	strcpy(options[1], "Audio: Yes");
 	strcpy(options[2], "Quit");
-	strcpy(options[3], "Opzione 4");
-	strcpy(options[4], "Opzione 5");
 	Menu a(0, options, NUM_OPTIONS);
 
 	auto audioStart = chrono::system_clock::now();
@@ -76,11 +75,19 @@ int main(){
 		audioEnd = chrono::system_clock::now();
 		audioSec = audioEnd - audioStart;
 
-		if(chose == 0) break;
-		else if(chose == 1 && audioSec.count() > 0.3){
+		if(chose == 0){
+			if(!gameFit()){
+				gotoxy(0, 0);
+				cout << BOLDRED << "The game won't fit in your terminal. Decrease the zoom, or set the window to fullscreen and try again" << RESET;
+				continue;
+			}
+			break;
+
+		}else if(chose == 1 && audioSec.count() > 0.3){
 			canPlayAudio = !canPlayAudio;
 			a.setAudio(canPlayAudio, 1);
 			audioStart = chrono::system_clock::now();
+
 		}else if(chose == 2){
 			exit(0);
 		}	
