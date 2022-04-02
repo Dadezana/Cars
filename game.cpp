@@ -19,8 +19,17 @@ using namespace std;
 
 bool canSpawn(){
 	srand(time(NULL));
-	int t = rand()%50;
-	if(t % 20 == 0) return true;
+	static auto spawnStart = chrono::system_clock::now();
+	static auto spawnEnd = chrono::system_clock::now();
+	spawnEnd = chrono::system_clock::now();
+	chrono::duration<double> secs = spawnEnd - spawnStart;
+	static int max = 50;
+
+	if( secs.count() > 1 ){
+		max += 1;
+		spawnStart = chrono::system_clock::now();
+	}
+	if( (rand()%max) % 20 == 0) return true;
 
 	return false;
 }
