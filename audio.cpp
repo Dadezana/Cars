@@ -141,5 +141,6 @@ void Audio::setVolume(int vol){
     sameSpeed.setVolume(vol);
     crash.setVolume(vol);
     horn.setVolume(vol);
-    stop.setVolume(vol);
+    stop.setVolume(vol * 2 <= 100 ? vol*2 : 100);
+    bgMusic.setVolume(vol * 2 <= 100 ? vol*2 : 100);
 }

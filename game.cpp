@@ -75,6 +75,7 @@ int main(){
 	const int MAX_SPEED_ALLOWED = 200;
 	bool play = true;
 	bool crashed = false;
+	Audio audio;
 	system("clear");
 /**
  * MAIN MENU
@@ -107,6 +108,8 @@ int main(){
 		}else if(chose == 1 && audioSec.count() > 0.3){
 			canPlayAudio = !canPlayAudio;
 			a.setAudio(canPlayAudio, 1);
+			if(canPlayAudio) audio.setVolume(60);
+			else audio.setVolume(0);
 			audioStart = chrono::system_clock::now();
 
 		}else if(chose == 2){
@@ -124,7 +127,6 @@ int main(){
 
 		int index = 0;
 		list<Enemy> enemies;	// other cars spawning
-		list<Enemy>::iterator it;
 		for(int i = 0; i < enemies.size(); i++){
 			enemies.pop_back();
 		}
@@ -155,10 +157,7 @@ int main(){
 
 	// deleting an enemy if too far from player
 		bool canErase = false;
-		// // list<Enemy>::iterator it;
-
-	// audio
-		Audio audio;
+		list<Enemy>::iterator it;
 
 		while(true)	{
 			timerEnd = chrono::system_clock::now();
@@ -194,12 +193,12 @@ int main(){
 			{
 				if(isAccelerating){
 					car.accelerate();
-					if(canPlayAudio) audio.playAccelerate(car.getSpeed());
+					audio.playAccelerate(car.getSpeed());
 				}
 
 				if(isBraking){
 					car.brake();
-					if(canPlayAudio) audio.playBrake(car.getSpeed());
+					audio.playBrake(car.getSpeed());
 				}
 				if(isRight){ 
 					if(car.getSpeed() > 0){
@@ -213,7 +212,7 @@ int main(){
 						isRight = false;
 					} 
 				}
-				if(canPlayAudio && !isAccelerating && !isBraking) audio.playSame(car.getSpeed());
+				if(!isAccelerating && !isBraking) audio.playSame(car.getSpeed());
 				carStart = chrono::system_clock::now();
 			}
 
@@ -272,7 +271,6 @@ int main(){
 			}
 
 			gotoxy(0, map.getBorder() + 5);
-			std::cout << "Enemies: " << enemies.size();
 			gotoxy(0, map.getBorder()+2);
 			std::cout << "Speed: " << car.getSpeed() <<" | " << car.getMaxSpeed() << "   ";
 		}
