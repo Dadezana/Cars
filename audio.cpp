@@ -133,12 +133,12 @@ void Audio::stopAllSounds(bool justGears){
 
 void Audio::setVolume(int vol){
     if(vol > 100) vol = 100;
-    firstGear.setVolume(vol);
-    secondGear.setVolume(vol);
-    thirdGear.setVolume(vol);
-    fourthGear.setVolume(vol);
-    brake.setVolume(vol);
-    sameSpeed.setVolume(vol);
+    firstGear.setVolume(vol-15);
+    secondGear.setVolume(vol-15 > 0 ? vol-15 : vol);
+    thirdGear.setVolume(vol-15 > 0 ? vol-15 : vol);
+    fourthGear.setVolume(vol-15 > 0 ? vol-15 : vol);
+    brake.setVolume(vol-15 > 0 ? vol-15 : vol);
+    sameSpeed.setVolume(vol-15 > 0 ? vol-15 : vol);
     crash.setVolume(vol);
     horn.setVolume(vol);
     stop.setVolume(vol * 2 <= 100 ? vol*2 : 100);
