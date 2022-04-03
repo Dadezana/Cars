@@ -15,7 +15,6 @@
 #include "audio.h"
 #define RIGHT true
 #define LEFT false
-// // #define MAX_SPAWN_TIME 7	// if no enemy spawns within 7sec, a new one will spawn immediatly
 using namespace std;
 
 bool canSpawn(bool reset = false){
@@ -41,8 +40,8 @@ bool canSpawn(bool reset = false){
 		spawnStart = chrono::system_clock::now();
 		return false;
 	}
-	gotoxy(0, 42);
-	cout << "minTime: " << minTime << "\nmaxTime: " << maxTime;
+	// // gotoxy(0, 42);
+	// // cout << "minTime: " << minTime << "\nmaxTime: " << maxTime;
 	static int spawnTime = minTime + rand()%(maxTime+1 - minTime);
 
 	if( secs.count() > 10 ){
@@ -146,6 +145,7 @@ int main(){
 /**
  * SETTING UP THE GAME
 */
+
 		Animation map;
 		Car car;
 		car.setBorder(map.getBorder());
@@ -185,6 +185,12 @@ int main(){
 		bool canErase = false;
 		list<Enemy>::iterator it;
 
+	// player's score
+		int points = 0;
+		auto startPoints = chrono::system_clock::now();
+		auto endPoints = chrono::system_clock::now();
+		chrono::duration<float> secPoints;
+
 		while(true)	{
 			timerEnd = chrono::system_clock::now();
 			timeLastSpawn = timerEnd - timerStart;
@@ -197,11 +203,19 @@ int main(){
 					timerStart = chrono::system_clock::now();
 				}
 
-	/**
-	 * REPAINTING THE CAR (due to a bug with sfml)
-	*/
-			car.display();
 
+	// Repainting the car (due to a bug with sfml)
+			car.display();
+	// Updating score
+			endPoints = chrono::system_clock::now();
+			secPoints = endPoints - startPoints;
+			if(secPoints.count() >= 0.3){
+				startPoints = chrono::system_clock::now();
+				if(car.getSpeed() > 100) points += car.getSpeed()/20; // min speed to get points: 100
+			}
+			gotoxy(0, map.getBorder() + 3);
+			cout << "Points: " << points << "  ";
+		
 	/**
 	 * CHECKING CONTROLS
 	*/
@@ -210,7 +224,17 @@ int main(){
 			isBraking = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
 			isRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
 			isLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) exit(0);
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q)){			// pause
+				audio.stopAllSounds();
+				sleep(1);
+				while(true){
+					if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q)){
+						sleep(1);
+						break;
+					}
+					continue;
+				}
+			}
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) audio.playHorn();
 
 			carEnd = chrono::system_clock::now();
@@ -296,8 +320,8 @@ int main(){
 				canUpdate = false;
 			}
 
-			gotoxy(0, map.getBorder() + 5);
-			cout << "Enemies: " << enemies.size();
+			// // gotoxy(0, map.getBorder() + 5);
+			// // cout << "Enemies: " << enemies.size();
 			gotoxy(0, map.getBorder()+2);
 			std::cout << "Speed: " << car.getSpeed() <<" | " << car.getMaxSpeed() << "   ";
 		}
