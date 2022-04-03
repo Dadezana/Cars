@@ -191,8 +191,14 @@ int main(){
 		auto endPoints = chrono::system_clock::now();
 		chrono::duration<float> secPoints;
 
+	// avoid calling chrono::system_clock::now() multiple times
+		auto current_time = chrono::system_clock::now();
+
 		while(true)	{
-			timerEnd = chrono::system_clock::now();
+
+			current_time = chrono::system_clock::now();
+
+			timerEnd = current_time;
 			timeLastSpawn = timerEnd - timerStart;
 			if( timeLastSpawn.count() > 1 )
 				if(canSpawn()){
@@ -200,22 +206,22 @@ int main(){
 					enemies.push_back(en);
 
 					index++;
-					timerStart = chrono::system_clock::now();
+					timerStart = current_time;
 				}
 
 
 	// Repainting the car (due to a bug with sfml)
 			car.display();
 	// Updating score
-			endPoints = chrono::system_clock::now();
+			endPoints = current_time;
 			secPoints = endPoints - startPoints;
 			if(secPoints.count() >= 0.3){
-				startPoints = chrono::system_clock::now();
+				startPoints = current_time;
 				if(car.getSpeed() > 100) points += car.getSpeed()/20; // min speed to get points: 100
 			}
 			gotoxy(0, map.getBorder() + 3);
 			cout << "Points: " << points << "  ";
-		
+
 	/**
 	 * CHECKING CONTROLS
 	*/
@@ -237,7 +243,9 @@ int main(){
 			}
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) audio.playHorn();
 
-			carEnd = chrono::system_clock::now();
+			current_time = chrono::system_clock::now();
+
+			carEnd = current_time;
 			seconds = carEnd - carStart;
 			if(seconds.count() > 0.05)
 			{
@@ -263,7 +271,7 @@ int main(){
 					} 
 				}
 				if(!isAccelerating && !isBraking) audio.playSame(car.getSpeed());
-				carStart = chrono::system_clock::now();
+				carStart = current_time;
 			}
 
 
@@ -275,7 +283,7 @@ int main(){
 			map.display(car.getSpeed());
 			car.display();
 
-			end = chrono::system_clock::now();
+			end = current_time;
 			canUpdate = false;
 			for(auto &en : enemies)
 			{
@@ -316,7 +324,7 @@ int main(){
 				canErase = false;
 			}
 			if(canUpdate){
-				start = chrono::system_clock::now();
+				start = current_time;
 				canUpdate = false;
 			}
 
