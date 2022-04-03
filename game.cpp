@@ -15,24 +15,49 @@
 #include "audio.h"
 #define RIGHT true
 #define LEFT false
-#define MAX_SPAWN_TIME 7	// if no enemy spawns within 7sec, a new one will spawn immediatly
+// // #define MAX_SPAWN_TIME 7	// if no enemy spawns within 7sec, a new one will spawn immediatly
 using namespace std;
 
-bool canSpawn(){
+bool canSpawn(bool reset = false){
 	srand(time(NULL));
+// determine if we can decrease max and min time
 	static auto spawnStart = chrono::system_clock::now();
 	static auto spawnEnd = chrono::system_clock::now();
 	spawnEnd = chrono::system_clock::now();
 	chrono::duration<double> secs = spawnEnd - spawnStart;
-	static int max = 50;
 
-	if( secs.count() > 1 ){
-		max += 5;
+// used to determine if its time to spawn an enemy
+	static auto timerStart = chrono::system_clock::now();
+	static auto timerEnd = chrono::system_clock::now();
+	timerEnd = chrono::system_clock::now();
+	chrono::duration<double> timer = timerEnd - timerStart;
+
+	static int maxTime = 9;
+	static int minTime = 4;
+	if(reset){
+		maxTime = 9;
+		minTime = 4;
+		timerStart = chrono::system_clock::now();
+		spawnStart = chrono::system_clock::now();
+		return false;
+	}
+	gotoxy(0, 42);
+	cout << "minTime: " << minTime << "\nmaxTime: " << maxTime;
+	static int spawnTime = minTime + rand()%(maxTime+1 - minTime);
+
+	if( secs.count() > 10 ){
+		if(maxTime > 3) maxTime--;
+		if(minTime > 0) minTime--;
 		spawnStart = chrono::system_clock::now();
 	}
-	if( (rand()%max) % 20 == 0) return true;
-
+	if(timer.count() >= spawnTime){
+		timerStart = chrono::system_clock::now();
+		spawnTime = minTime + rand()%(maxTime+1 - minTime);
+		return true;
+	}
 	return false;
+	// // return (rand()%maxTime) % 10 == 0;
+
 }
 
 void gameOver(){
@@ -154,6 +179,7 @@ int main(){
 		auto timerStart = chrono::system_clock::now();
 		auto timerEnd = chrono::system_clock::now();
 		chrono::duration<float> timeLastSpawn;				// last time an enemy spawned
+		canSpawn(true);
 
 	// deleting an enemy if too far from player
 		bool canErase = false;
@@ -163,7 +189,7 @@ int main(){
 			timerEnd = chrono::system_clock::now();
 			timeLastSpawn = timerEnd - timerStart;
 			if( timeLastSpawn.count() > 1 )
-				if(timeLastSpawn.count() > MAX_SPAWN_TIME || canSpawn()){
+				if(canSpawn()){
 					Enemy en(map.getBorder(), index);
 					enemies.push_back(en);
 
@@ -271,6 +297,7 @@ int main(){
 			}
 
 			gotoxy(0, map.getBorder() + 5);
+			cout << "Enemies: " << enemies.size();
 			gotoxy(0, map.getBorder()+2);
 			std::cout << "Speed: " << car.getSpeed() <<" | " << car.getMaxSpeed() << "   ";
 		}
