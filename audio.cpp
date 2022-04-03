@@ -10,6 +10,9 @@ Audio::Audio(){
     hornBuffer.loadFromFile("sounds/horn.wav");
     crashBuffer.loadFromFile("sounds/crash.wav");
     stopBuffer.loadFromFile("sounds/stop.wav");
+    bgMusic.openFromFile("sounds/music.wav");
+    bgMusic.setLoop(true);
+    bgMusic.play();
 
     firstGear.setBuffer(firstGearBuffer);
     secondGear.setBuffer(secondGearBuffer);

@@ -15,6 +15,7 @@ class Audio{
     sf::Sound horn;
     sf::Sound crash;
     sf::Sound stop;
+    sf::Music bgMusic;
 
     sf::SoundBuffer firstGearBuffer;    
     sf::SoundBuffer secondGearBuffer;
