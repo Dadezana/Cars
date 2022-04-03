@@ -13,6 +13,7 @@ The game is simple: avoid other cars<br>
 - **D**:     Turn right
 - **A**:     Turn left
 - **Space**: Horn
+- **Q**: Pause/Unpause
 >*Make sure your terminal screen size is at least 225x41. Otherwise the game won't display correctly. You can zoom out or set the window to fullscreen*
 # Build
 This program in order to be built needs the [SFML](https://www.sfml-dev.org/download.php) API<br>
