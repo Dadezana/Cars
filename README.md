@@ -3,11 +3,11 @@ A terminal racing car game with ascii art
 
 # How to play
 The game is simple: avoid other cars<br>
-### Navigate in the menu:
+#### Navigate in the menu:
 - **W** or **↑** to move up
 - **S** or **↓** to move down
 - **↵** to select that option<br>
-### Controls in the game:
+#### Controls in the game:
 - **W**:     Accelerate
 - **S**:     Brake
 - **D**:     Turn right
