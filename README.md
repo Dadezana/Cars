@@ -15,8 +15,8 @@ The game is simple: avoid other cars<br>
 - **Space**: Horn
 - **Q**: Pause/Unpause
 >*Make sure your terminal screen size is at least 225x41. Otherwise the game won't display correctly. You can zoom out or set the window to fullscreen*
-# Build
-This program in order to be built needs the [SFML](https://www.sfml-dev.org/download.php) API<br>
+# Build and Execute
+This program in order to be built/executed needs the [SFML](https://www.sfml-dev.org/download.php) API<br>
 You can also download it from the command line(suggested):
 ### Arch linux
 ```bash
@@ -31,6 +31,7 @@ Remember to include the flags of the modules you use in the program:
 ```bash
 g++ *.cpp -lsfml-window -lsfml-audio
 ```
+Otherwise you can use the makefile<br>
 You can find other info about building [here](https://www.sfml-dev.org/tutorials/2.5/start-linux.php)
 
 
